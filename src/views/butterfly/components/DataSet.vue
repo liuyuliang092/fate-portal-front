@@ -53,7 +53,7 @@
   <script>
 import { getParticipantAndDataList } from '@/api/project'
 import { getDataHeaders } from '@/api/data'
-import { saveAlgorithmParamsSettings,getAlgorithmParamsSettings } from '@/api/graph'
+import { saveAlgorithmParamsSettings, getAlgorithmParamsSettings } from '@/api/graph'
 export default {
   props: {
     onclickNodeData: {}
@@ -86,18 +86,18 @@ export default {
       label_name: '',
       label_type: '',
       columnList: [],
-      params:{},
+      params: {},
       mock_data: [
         {
           "key": "584156a482874ee0a268ed5f7443f99a",
-          "name": "site1", "dataActionOptionsList": [{ "value": "ae8be05296924fcb8bcb88c9d9f896a3", "label": "site1-2023-010301","columnList":["id","x1","x2","x3"] }],
-          "labelTypeList":["int","string","float"]
+          "name": "site1", "dataActionOptionsList": [{ "value": "ae8be05296924fcb8bcb88c9d9f896a3", "label": "site1-2023-010301", "columnList": ["id", "x1", "x2", "x3"] }],
+          "labelTypeList": ["int", "string", "float"]
         },
 
         {
           "key": "6015294c293846b0881360e1151d90ea", "name": "site2", "dataActionOptionsList":
             [{ "value": "cb8a00b4a39343db98f3734f23080356", "label": "site2-2023-0103001" }],
-            "labelTypeList":["int","string","float"]
+          "labelTypeList": ["int", "string", "float"]
         }
       ]
     };
@@ -113,10 +113,10 @@ export default {
           this.params = this.onclickNodeData;
           this.params.paramSettings = JSON.stringify(this.dynamicValidateForm.value);
           console.info(JSON.stringify(this.params));
-          saveAlgorithmParamsSettings(this.params).then(res=>{
-            if(res.code === 0){
+          saveAlgorithmParamsSettings(this.params).then(res => {
+            if (res.code === 0) {
               this.$message.success(res.message);
-            }else{
+            } else {
               this.$message.warning(res.message);
             }
           })
@@ -131,17 +131,19 @@ export default {
         ({ 'with_label': '', 'label_name': '', 'label_type': '', 'data_uuid': '', 'site_uuid': item.key }))
     },
     getParticipantAndDataList(projectUuid) {
-      this.dynamicValidateForm.domains = this.mock_data
-      this.dynamicValidateForm.value = this.dynamicValidateForm.domains.map(item =>
-        ({ 'with_label': '', 'label_name': '', 'label_type': '', 'data_uuid': '', 'site_uuid': item.key }))
-      //   getParticipantAndDataList(projectUuid).then(res => {
-      //     if (res.code === 0) {
-      //       this.dynamicValidateForm.domains = res.data
-      //       console.info('domains = ', this.dynamicValidateForm.domains)
-      //     }
-      //   })
-      getAlgorithmParamsSettings(this.onclickNodeData).then(res=>{
-        if(res.code === 0){
+      // this.dynamicValidateForm.domains = this.mock_data
+      console.info('query data set,project uuid = ',projectUuid)
+      getParticipantAndDataList(projectUuid).then(res => {
+        debugger
+        if (res.code === 0) {
+          this.dynamicValidateForm.domains = res.data
+          console.info('domains = ', this.dynamicValidateForm.domains)
+          this.dynamicValidateForm.value = this.dynamicValidateForm.domains.map(item =>
+            ({ 'with_label': '', 'label_name': '', 'label_type': '', 'data_uuid': '', 'site_uuid': item.key }))
+        }
+      })
+      getAlgorithmParamsSettings(this.onclickNodeData).then(res => {
+        if (res.code === 0) {
           this.dynamicValidateForm.value = JSON.parse(res.data.paramSettings);
         }
       })
