@@ -23,7 +23,7 @@ export default {
   menu: {
     locale: true
   },
-  title: '隐私计算平台',
+  title: 'fate-portal',
   pwa: false,
   iconfontUrl: '',
   production: process.env.NODE_ENV === 'production' && process.env.VUE_APP_PREVIEW !== 'true'

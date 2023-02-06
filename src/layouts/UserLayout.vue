@@ -10,7 +10,7 @@
           <div class="header">
             <a href="/">
               <img src="~@/assets/logo.svg" class="logo" alt="logo">
-              <span class="title">隐私计算平台</span>
+              <span class="title">fate-portal</span>
             </a>
           </div>
           <div class="desc">
