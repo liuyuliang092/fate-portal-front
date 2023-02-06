@@ -125,7 +125,7 @@ export default {
       this.visible = true
       getAvailableLocalDataForProject(this.uuid).then(res => {
         if (res.code === 0) {
-          this.memberdata = res.data
+          this.memberdata = res.data.records
         } else {
           alert(res.message)
         }
