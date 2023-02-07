@@ -12,7 +12,14 @@
     <a-button class="new-btn" shape="round" @click="handleCloseClick">
       关闭的项目<a-badge :count="count" :number-style="{ backgroundColor: '#108ee9' }" v-if="closeClick"></a-badge>
     </a-button>
-    <a-table :columns="columns" :data-source="dataList" :scroll="{ x: 1200, y: 1000 }">
+    <a-table
+      :columns="columns"
+      :data-source="dataList"
+      :scroll="{ x: 1200, y: 1000 }"
+      :pagination="pagination"
+      @change="handleTableChange"
+      :rowKey="(tableDatas) => tableDatas.id"
+    >
       <span slot="name" slot-scope="text, record">
         <a @click="handleInfoClick(record)">{{ record.name }}</a>
       </span>
@@ -260,11 +267,30 @@ export default {
       allClick: true,
       myClick: false,
       joinClick: false,
-      closeClick: false
+      closeClick: false,
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ["10", "20", "50", "100"],
+        showTotal: total => `共有 ${total} 条数据`,
+      },
+      queryParam: {
+        current: 1,
+        pageSize: 10
+      },
     };
 
   },
   methods: {
+    handleTableChange(pagination) {
+      this.pagination.current = pagination.current;
+      this.pagination.pageSize = pagination.pageSize;
+      this.queryParam.current = pagination.current;
+      this.queryParam.pageSize = pagination.pageSize;
+      console.info('page select = ',this.queryParam)
+      this.initProjectList(this.queryParam);
+    },
     handleMyClick() {
       console.log('myProjects = ', this.myProjects)
       this.columns = myColumns
@@ -277,11 +303,14 @@ export default {
     handleAllClick() {
       console.log('allProjects = ', this.allProjects)
       this.columns = allColumns
-      this.dataList = this.allProjects
+      this.dataList = this.allProjects.records
       this.myClick = false
       this.allClick = true
       this.joinClick = false
       this.closeClick = false
+      const pagination = { ...this.pagination };
+      pagination.total = this.allProjects.total;
+      this.pagination = pagination;
     },
     handleJoinClick() {
       console.log('joinedProjects = ', this.joinedProjects)
@@ -319,6 +348,12 @@ export default {
         this.$message.error('无法关闭非本站点创建的项目')
       }
       console.log(record)
+    },
+    initProjectList(queryParam) {
+      this.$store.dispatch('getAllProjectList',queryParam).then(() => {
+        this.handleAllClick();
+
+      });
     }
   },
   computed: {
@@ -361,10 +396,8 @@ export default {
   mounted() {
     this.columns = allColumns;
   },
-  created(){
-    this.$store.dispatch('getAllProjectList').then(()=>{
-      this.handleAllClick();
-    });
+  created() {
+    this.initProjectList(this.queryParam);
   }
 }
 </script>

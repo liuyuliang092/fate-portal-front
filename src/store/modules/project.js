@@ -50,16 +50,16 @@ const project = {
     }
   },
   actions: {
-    getAllProjectList({ commit }) {
+    getAllProjectList({ commit },pageInfo) {
       return new Promise((resolve, reject) => {
-        getAllProjectList().then(res => {
+        getAllProjectList(pageInfo).then(res => {
           const { message, data, code } = res;
           if (code === 0) {
             commit('SET_CLOSEDPROJECTS', data.closedProjectsDtoList ? data.closedProjectsDtoList.records : [])
             commit('SET_INVITEDPROJECTS', data.invitedProjectsDtoList ? data.invitedProjectsDtoList.records : [])
             commit('SET_JOINEDPROJECTS', data.joinedProjectsDtoList ? data.joinedProjectsDtoList.records : [])
             commit('SET_MYPROJECTS', data.myProjectsDtoList ? data.myProjectsDtoList.records : [])
-            commit('SET_ALLPROJECTS', data.allProjectsDtoList ? data.allProjectsDtoList.records : [])
+            commit('SET_ALLPROJECTS', data.allProjectsDtoList ? data.allProjectsDtoList : [])
           } else {
             alert(message)
           }

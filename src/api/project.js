@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import { axios } from '@/utils/request'
 
-export function getAllProjectList() {
+export function getAllProjectList(params) {
   return axios({
-    url: '/v1/project',
+    url: `/v1/project?pageNo=${params.current}&pageSize=${params.pageSize}`,
     method: 'get'
   })
 }

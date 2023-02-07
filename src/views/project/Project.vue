@@ -69,7 +69,7 @@ export default {
       reload: this.reload
     }
   },
-  components: { ProjectInvite, ProjectList, X6Flow },
+  components: { ProjectInvite, ProjectList},
   data() {
     return {
       visible: false,
