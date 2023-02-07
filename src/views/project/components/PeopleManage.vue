@@ -133,25 +133,32 @@ export default {
     handleOk(e) {
       this.ModalText = 'The modal will be closed after two seconds'
       this.confirmLoading = true
-      console.info('select site info2 = ', this.memberdata[this.selectedRowKeys])
-      inviteOtherSiteToProject(this.memberdata[this.selectedRowKeys],this.uuid).then(res=>{
-        if(res.code === 0){
-          alert('invite success')
+      inviteOtherSiteToProject(this.memberdata[this.selectedRowKeys], this.uuid).then(res => {
+        if (res.code === 0) {
+          this.$message.success('invite success');
+          this.getParticipantList(this.uuid);
+        } else {
+          this.$message.warning('invite failed');
         }
-      })
-      setTimeout(() => {
         this.visible = false
-        this.confirmLoading = false
-      }, 1000)
+      })
     },
     handleCancel(e) {
-      console.log('Clicked cancel button')
       this.visible = false
     },
     onSelectChange(selectedRowKeys) {
-      console.log('selectedRowKeys changed: ', selectedRowKeys)
       this.selectedRowKeys = selectedRowKeys
     },
+    getParticipantList(projectUuid) {
+      getParticipantList(projectUuid, false).then(response => {
+        if (response.code === 0) {
+          this.data = response.data
+        } else {
+          this.$message.warning(response.message);
+        }
+      })
+    }
+
     // onShowSizeChange(current, pageSize) {
     //   getParticipantList(newValue, current, this.pageSize).then(response => {
     //     if (response.code === 0) {
@@ -167,15 +174,7 @@ export default {
   watch: {
     uuid: {
       handler(newValue, oldValue) {
-        console.log('初始化项目参与方列表 = ', newValue, oldValue)
-        getParticipantList(newValue, false).then(response => {
-          debugger
-          if (response.code === 0) {
-            this.data = response.data
-          } else {
-            alert(response.message)
-          }
-        })
+        this.getParticipantList(newValue);
       },
       immediate: true
     }

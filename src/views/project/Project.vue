@@ -1,12 +1,10 @@
 <template>
   <div>
     <a-card :body-style="{ padding: '24px 32px' }" :bordered="false"
-      ><a-button class="new-btn" @click="handleCreateProject">
-        新建项目
-      </a-button>
+      ><a-button class="new-btn" @click="handleCreateProject"> 新建项目 </a-button>
       <a-tabs @change="callback">
         <a-tab-pane key="1" tab="项目列表">
-          <project-list />
+          <project-list ref="child" />
         </a-tab-pane>
         <a-tab-pane key="2" tab="项目邀请">
           <project-invite />
@@ -84,23 +82,14 @@ export default {
     handleOk(e) {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          console.log('form' , this.form)
-          console.log('form name' , this.form.name)
-          console.log('form description' , this.form.description)
-          debugger
-          //上传数据
           createNewProject({ description: this.form.description, name: this.form.name }).then(response => {
-            debugger
             if (response.code === 0) {
-              this.confirmLoading = true
-              setTimeout(() => {
+              this.$store.dispatch('getAllProjectList').then(() => {
+                this.$refs.child.handleAllClick();
                 this.visible = false
-                this.confirmLoading = false
-              }, 2000)
+              });
             }
-          })
-          //创建完成，更新数据
-          this.$store.dispatch('getAllProjectList')
+          });
           return true
         } else {
           console.log('error submit!!')

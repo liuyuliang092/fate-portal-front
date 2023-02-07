@@ -8,6 +8,11 @@
           <a @click="handleDelete(record)">删除</a>
         </a-space>
       </span>
+      <span slot="type" slot-scope="record">
+        <a-space>
+          <div v-if="record.type==0">模型训练</div>
+        </a-space>
+      </span>
     </a-table>
   </div>
 </template>
@@ -45,7 +50,8 @@ export default {
       {
         title: '任务类型',
         dataIndex: 'type',
-        key: 'type'
+        key: 'type',
+        scopedSlots: { customRender: 'type' }
       },
       {
         title: '发起者',

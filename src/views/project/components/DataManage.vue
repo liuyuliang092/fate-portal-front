@@ -46,18 +46,7 @@ export default {
         dataIndex: 'creationTime'
       }
     ]
-    const memberdata = [
-      // {
-      //   key: '1',
-      //   name: 'portal15',
-      //   creationTime: '2022',
-      //   dataId: '15',
-      //   providingSiteName: '5',
-      //   providingSitePartyId: 15,
-      //   description: '111',
-      //   providingSiteUuid: '456'
-      // }
-    ]
+    const memberdata = []
     const columns = [
       {
         title: '名称',
@@ -108,13 +97,7 @@ export default {
     uuid: {
       handler(newValue, oldValue) {
         console.log(newValue, oldValue)
-        getAssociatedDataListForProject(newValue).then(response => {
-          if (response.code === 0) {
-            this.data = this.data.concat(response.data)
-          } else {
-            alert(res.message)
-          }
-        })
+        this.getAssociatedDataListForProject(newValue);
       },
       immediate: true
     }
@@ -127,14 +110,12 @@ export default {
         if (res.code === 0) {
           this.memberdata = res.data.records
         } else {
-          alert(res.message)
+          this.$message.warning(res.message);
         }
       })
     },
     handleOk(e) {
-      console.log(this.selectedRowKeys)
       this.selectedRowKeys.forEach(item => {
-        console.log(this.memberdata[item].dataId)
         const params = {
           uuid: this.uuid,
           dataId: this.memberdata[item].dataId,
@@ -142,19 +123,15 @@ export default {
         }
         associateLocalDataToCurrentProject(params).then(res => {
           if (res.code === 0) {
-            alert('关联成功')
+            this.$message.success('associate success');
+            this.getAssociatedDataListForProject(this.uuid);
           } else {
-            alert('关联失败')
+            this.$message.warning('associate failed');
           }
           this.visible = false
           this.confirmLoading = false
         })
       })
-      // this.confirmLoading = true
-      // setTimeout(() => {
-      //   this.visible = false
-      //   this.confirmLoading = false
-      // }, 2000)
     },
     handleCancel(e) {
       console.log('Clicked cancel button')
@@ -172,6 +149,15 @@ export default {
             // this.data = res.data
           } else {
             alert(res.message)
+          }
+        })
+    },
+    getAssociatedDataListForProject(projectUuid){
+      getAssociatedDataListForProject(projectUuid).then(response => {
+          if (response.code === 0) {
+            this.data = this.data.concat(response.data)
+          } else {
+            this.$message.warning(res.message);
           }
         })
     }
