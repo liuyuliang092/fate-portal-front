@@ -47,7 +47,7 @@ export default {
           that.getNodeStatus()
           clearTimeout(that.timer)
           sendReq(that)
-        }, 3000)
+        }, 6000)
       }
       sendReq(this)
     },
