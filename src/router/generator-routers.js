@@ -35,8 +35,8 @@ const constantRouterComponents = {
   // ProfileAdvanced: () => import('@/views/profile/advanced/Advanced'),
 
   // result
-  ResultSuccess: () => import(/* webpackChunkName: "result" */ '@/views/result/Success'),
-  ResultFail: () => import(/* webpackChunkName: "result" */ '@/views/result/Error'),
+  // ResultSuccess: () => import(/* webpackChunkName: "result" */ '@/views/result/Success'),
+  // ResultFail: () => import(/* webpackChunkName: "result" */ '@/views/result/Error'),
 
   // exception
   Exception403: () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
