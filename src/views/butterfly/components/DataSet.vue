@@ -131,22 +131,19 @@ export default {
         ({ 'with_label': '', 'label_name': '', 'label_type': '', 'data_uuid': '', 'site_uuid': item.key }))
     },
     getParticipantAndDataList(projectUuid) {
-      // this.dynamicValidateForm.domains = this.mock_data
-      console.info('query data set,project uuid = ',projectUuid)
       getParticipantAndDataList(projectUuid).then(res => {
-        debugger
         if (res.code === 0) {
           this.dynamicValidateForm.domains = res.data
-          console.info('domains = ', this.dynamicValidateForm.domains)
           this.dynamicValidateForm.value = this.dynamicValidateForm.domains.map(item =>
             ({ 'with_label': '', 'label_name': '', 'label_type': '', 'data_uuid': '', 'site_uuid': item.key }))
+          getAlgorithmParamsSettings(this.onclickNodeData).then(res => {
+            if (res.code === 0) {
+              this.dynamicValidateForm.value = JSON.parse(res.data.paramSettings);
+            }
+          })
         }
       })
-      getAlgorithmParamsSettings(this.onclickNodeData).then(res => {
-        if (res.code === 0) {
-          this.dynamicValidateForm.value = JSON.parse(res.data.paramSettings);
-        }
-      })
+
     },
     onChange(e) {
       console.log('radio checked', e.target.value);

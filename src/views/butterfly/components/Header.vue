@@ -78,18 +78,11 @@ export default {
     },
     //运行当前流程
     run() {
-      // this.setTimeoutForInterval()
+      this.setTimeoutForInterval();
       const graphData = this.vueGraph.toJSON();
       runGraph({ projectUuid: this.projectUuid, taskUuid: this.taskUuid, graphData: graphData }).then(response => {
         this.$message.info(response.message);
         console.info('run graph result = ', response)
-        // if (response.code === 200) {
-        //   this.confirmLoading = true
-        //   setTimeout(() => {
-        //     this.visible = false
-        //     this.confirmLoading = false
-        //   }, 2000)
-        // }
       })
     }
   },

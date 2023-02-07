@@ -109,11 +109,11 @@ export default {
         dataIndex: 'uploadJobStatus',
         scopedSlots: { customRender: 'tag' }
       },
-      {
-        title: '操作',
-        key: 'action',
-        scopedSlots: { customRender: 'action' }
-      }
+      // {
+      //   title: '操作',
+      //   key: 'action',
+      //   scopedSlots: { customRender: 'action' }
+      // }
     ]
     return {
       searchName: '',
