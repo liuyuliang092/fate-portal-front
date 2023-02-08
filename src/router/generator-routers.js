@@ -1,3 +1,21 @@
+/**
+ *
+ *  Copyright 2019 The FATE Authors. All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 // eslint-disable-next-line
 import * as loginService from '@/api/login'
 // eslint-disable-next-line
@@ -14,44 +32,10 @@ const constantRouterComponents = {
   '404': () => import(/* webpackChunkName: "error" */ '@/views/exception/404'),
   '500': () => import(/* webpackChunkName: "error" */ '@/views/exception/500'),
 
-  // 你需要动态引入的页面组件
-  // Workplace: () => import('@/views/dashboard/Workplace'),
-  // Analysis: () => import('@/views/dashboard/Analysis'),
-
-  // form
-  // BasicForm: () => import('@/views/form/basicForm'),
-  // StepForm: () => import('@/views/form/stepForm/StepForm'),
-  // AdvanceForm: () => import('@/views/form/advancedForm/AdvancedForm'),
-
-  // list
-  // TableList: () => import('@/views/list/TableList'),
-  // StandardList: () => import('@/views/list/BasicList'),
-  // CardList: () => import('@/views/list/CardList'),
-  // SearchLayout: () => import('@/views/list/search/SearchLayout'),
-  // SearchArticles: () => import('@/views/list/search/Article'),
-  // SearchProjects: () => import('@/views/list/search/Projects'),
-  // SearchApplications: () => import('@/views/list/search/Applications'),
-  // ProfileBasic: () => import('@/views/profile/basic'),
-  // ProfileAdvanced: () => import('@/views/profile/advanced/Advanced'),
-
-  // result
-  // ResultSuccess: () => import(/* webpackChunkName: "result" */ '@/views/result/Success'),
-  // ResultFail: () => import(/* webpackChunkName: "result" */ '@/views/result/Error'),
-
   // exception
   Exception403: () => import(/* webpackChunkName: "fail" */ '@/views/exception/403'),
   Exception404: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404'),
   Exception500: () => import(/* webpackChunkName: "fail" */ '@/views/exception/500'),
-
-  // account
-  // AccountCenter: () => import('@/views/account/center'),
-  // AccountSettings: () => import('@/views/account/settings/Index'),
-  // BasicSetting: () => import('@/views/account/settings/BasicSetting'),
-  // SecuritySettings: () => import('@/views/account/settings/Security'),
-  // CustomSettings: () => import('@/views/account/settings/Custom'),
-  // BindingSettings: () => import('@/views/account/settings/Binding'),
-  // NotificationSettings: () => import('@/views/account/settings/Notification'),
-  // 'TestWork': () => import(/* webpackChunkName: "TestWork" */ '@/views/dashboard/TestWork')
 }
 
 // 前端未找到页面路由（固定不用改）
@@ -117,7 +101,6 @@ export const generatorDynamicRouter = token => {
  */
 export const generator = (routerMap, parent) => {
   return routerMap.map(item => {
-    debugger
     const { title, show, hideChildren, hiddenHeaderContent, target, icon } = item.meta || {}
     const currentRouter = {
       // 如果路由设置了 path，则作为默认 path，否则 路由地址 动态拼接生成如 /dashboard/workplace

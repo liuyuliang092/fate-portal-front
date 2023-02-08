@@ -142,6 +142,7 @@ export default {
         associateLocalDataToCurrentProject(params).then(res => {
           if (res.code === 0) {
             this.$message.success('associate success');
+            console.info('project associated data,uuid = ', this.uuid)
             this.getAssociatedDataListForProject(this.uuid);
           } else {
             this.$message.warning('associate failed');
@@ -170,14 +171,14 @@ export default {
           }
         })
     },
-    getAssociatedDataListForProject(projectUuid){
+    getAssociatedDataListForProject(projectUuid) {
       getAssociatedDataListForProject(projectUuid).then(response => {
-          if (response.code === 0) {
-            this.data = this.data.concat(response.data)
-          } else {
-            this.$message.warning(res.message);
-          }
-        })
+        if (response.code === 0) {
+          this.data = this.data.concat(response.data)
+        } else {
+          this.$message.warning(res.message);
+        }
+      })
     }
   }
 }
