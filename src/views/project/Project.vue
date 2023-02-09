@@ -86,7 +86,11 @@ export default {
           //{ min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
         ],
         description: [{ required: true, message: '请输入项目描述', trigger: 'blur' }]
-      }
+      },
+      queryParam: {
+        current: 1,
+        pageSize: 10
+      },
     }
   },
   methods: {
@@ -101,7 +105,7 @@ export default {
         if (valid) {
           createNewProject({ description: this.form.description, name: this.form.name }).then(response => {
             if (response.code === 0) {
-              this.$store.dispatch('getAllProjectList').then(() => {
+              this.$store.dispatch('getAllProjectList',this.queryParam).then(() => {
                 this.$refs.child.handleAllClick();
                 this.visible = false
               });
