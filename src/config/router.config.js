@@ -90,14 +90,13 @@ export const asyncRouterMap = [
         component: () => import('@/views/data/DataInfo'),
         meta: { title: '数据详情', keepAlive: true, icon: 'form', }
       },
-
-
       {
         path: '/modal',
         name: 'Modal',
         component: () => import('@/views/modal/Modalindex'),
         meta: { title: '模型管理', keepAlive: true, icon: 'form' }
       },
+      
       //butterfly
       // {
       //   path: '/butterfly',
