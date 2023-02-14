@@ -15,6 +15,7 @@
  *  limitations under the License.
  *
  */
+import data from '@/store/modules/data'
 import { axios } from '@/utils/request'
 
 export function getDataList() {
@@ -63,5 +64,28 @@ export function updateDataRecordIdMetaInfo(params) {
       idEncryptionType: params.idEncryptionType,
       idType: params.idType
     }
+  })
+}
+
+export function checkChunk(params){
+  return axios({
+    url:`/v1/data/checkChunk?hash=${params}`,
+    method:'get',
+  })
+}
+
+export function uploadSlice(params){
+  return axios({
+    url:`/v1/data/uploadSlice`,
+    method:'post',
+    data:params
+  })
+}
+
+export function merge(params){
+  return axios({
+    url:`/v1/data/merge`,
+    method:'post',
+    data:params
   })
 }

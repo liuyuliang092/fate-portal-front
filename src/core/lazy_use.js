@@ -77,7 +77,9 @@ import PageLoading from '@/components/PageLoading'
 import PermissionHelper from '@/core/permission/permission'
 import './directives/action'
 import formCreate from '@form-create/ant-design-vue'
+import uploader from 'vue-simple-uploader'
 
+Vue.use(uploader)
 Vue.use(ConfigProvider)
 Vue.use(Layout)
 Vue.use(Input)

@@ -30,36 +30,7 @@
           <a @click="handleDeleteClick(record.dataId)">删除</a>
         </span>
       </a-table>
-      <a-modal
-        title="上传本地数据"
-        :visible="visible"
-        :confirm-loading="confirmLoading"
-        @ok="handleOk"
-        @cancel="handleCancel"
-        ok-text="上传"
-        cancel-text="取消"
-      >
-        <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-          <a-form-model-item label="名称" ref="name" prop="name">
-            <a-input
-              v-model="form.name"
-              @blur="
-                () => {
-                  $refs.name.onFieldBlur()
-                }
-              "
-            />
-          </a-form-model-item>
-          <a-form-model-item label="描述" prop="description">
-            <a-input v-model="form.description" type="textarea" />
-          </a-form-model-item>
-          <a-form-model-item label="文件">
-            <a-upload :file-list="fileList" :remove="handleRemove" :before-upload="beforeUpload">
-              <a-button> <a-icon type="folder" /> BROWSE </a-button>
-            </a-upload>
-          </a-form-model-item>
-        </a-form-model>
-      </a-modal>
+      <ChunkUpload ref="ChunkUpload"></ChunkUpload>
       <a-modal
         title="您想要删除这条数据吗？"
         :visible="visibleDelete"
@@ -93,9 +64,11 @@
  */
 
 import { deleteDataFile, uploadLocalData, downloadDataFile } from '@/api/data'
+import ChunkUpload from './ChunkUpload.vue'
 
 export default {
   name: 'data-index',
+  components: { ChunkUpload },
   data() {
     const columns = [
       {
@@ -188,7 +161,7 @@ export default {
       })
     },
     showModal() {
-      this.visible = true
+      this.$refs.ChunkUpload.showModal();
     },
     handleRemove(file) {
       const index = this.fileList.indexOf(file)
@@ -213,8 +186,6 @@ export default {
       fileList.forEach(file => {
         formData.append('file', file)
       })
-      // formData.append('name', this.form.name)
-      // formData.append('description', this.form.description)
       this.uploading = true
       uploadLocalData(formData, this.form.name, this.form.description).then(response => {
         if (response.code === 0) {
@@ -226,30 +197,8 @@ export default {
           this.uploading = false
           this.$message.error('upload failed.')
         }
-
       })
-      // You can use any AJAX library you like
-      // reqwest({
-      //   url: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-      //   method: 'post',
-      //   processData: false,
-      //   data: formData,
-      //   success: () => {
-      //     this.fileList = []
-      //     this.uploading = false
-      //     this.$message.success('upload successfully.')
-      //   },
-      //   error: () => {
-      //     this.uploading = false
-      //     this.$message.error('upload failed.')
-      //   }
-      // })
       this.confirmLoading = true
-
-      setTimeout(() => {
-        this.visible = false
-        this.confirmLoading = false
-      }, 2000)
     },
     handleDeleteClick(id) {
       this.visibleDelete = true

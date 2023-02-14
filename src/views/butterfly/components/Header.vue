@@ -96,11 +96,17 @@ export default {
     },
     //运行当前流程
     run() {
-      this.setTimeoutForInterval();
+      // this.setTimeoutForInterval();
       const graphData = this.vueGraph.toJSON();
-      runGraph({ projectUuid: this.projectUuid, taskUuid: this.taskUuid, graphData: graphData }).then(response => {
-        this.$message.info(response.message);
-        console.info('run graph result = ', response)
+      runGraph({ projectUuid: this.projectUuid, taskUuid: this.taskUuid, graphData: graphData }).then(res => {
+        if(res.code === 0){
+          this.$message.info(res.message);
+          // let runParams = JSON.stringify(JSON.parse(res.data), null, '\t')
+          // this.$message.info(runParams);
+        }else{
+          this.$message.warn(res.message);
+          this.$message.warn(res.data);
+        }
       })
     }
   },
