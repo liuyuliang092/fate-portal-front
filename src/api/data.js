@@ -24,12 +24,12 @@ export function getDataList() {
     method: 'get'
   })
 }
-export function uploadLocalData(params,name,description) {
+export function uploadLocalData(hash,name,description) {
   return axios({
     url: `/v1/data?name=${name}&description=${description}`,
     method: 'post',
     processData: false,
-    data: params,
+    data: {fileHash:hash},
   })
 }
 export function deleteDataFile(dataId) {

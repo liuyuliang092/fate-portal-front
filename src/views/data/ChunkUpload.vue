@@ -6,7 +6,6 @@
       @ok="handleUpload"
       @cancel="handleCancel"
       cancel-text="取消"
-      destroyOnClose="true"
     >
       <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-form-model-item label="名称" ref="name" prop="name">
@@ -22,14 +21,13 @@
         <a-form-model-item label="描述" prop="description">
           <a-input v-model="form.description" type="textarea" />
         </a-form-model-item>
-        <a-form-model-item label="文件">
+        <a-form-model-item label="文件" prop="fileList">
           <a-upload :file-list="fileList" :remove="handleRemove" :multiple="false" :before-upload="beforeUpload">
             <a-button>
               <a-icon type="upload" />
               选择文件
             </a-button>
           </a-upload>
-
           <a-progress
             :percent="Math.round((sliceProgress / sliceCount) * 100)"
             :status="sliceProgress === sliceCount ? 'success' : 'active'"
@@ -77,7 +75,7 @@
  */
 import SparkMD5 from 'spark-md5'
 import { message } from 'ant-design-vue';
-import { checkChunk, uploadSlice, merge } from '@/api/data'
+import { checkChunk, uploadSlice, merge, uploadLocalData } from '@/api/data'
 export default {
   data() {
     return {
@@ -105,16 +103,16 @@ export default {
         name: [{ required: true, message: '请输入数据名称', trigger: 'blur' }],
         description: [{ required: true, message: '请输入数据描述', trigger: 'blur' }]
       },
-      uploadVisible:false,
-      destroyOnClose:true,
+      uploadVisible: false,
+      destroyOnClose: true,
     }
   },
   mounted() {
-    
+
   },
   methods: {
     beforeUpload(file) {
-      message.info("开始文件切片");
+      message.info("start file slicing");
       this.showSliceProgress = true;
       this.fileList = [file];
       this.fileChunkList = [];
@@ -193,9 +191,11 @@ export default {
       checkChunk(this.hash).then(res => {
         if (res.code === 0) {
           this.$message.success(res.message);
+          this.fastUpload(this.hash);
         } else {
+          debugger
           this.uploading = true;
-          this.sliceCount -= this.finishCount;
+          // this.sliceCount -= this.finishCount;
           this.errorCount = 0;
           this.finishCount = 0;
           this.sendCount = 0;
@@ -284,10 +284,10 @@ export default {
         }
         this.$store.dispatch('getDataList')
         this.uploading = false;
-        this.uploadVisible=false;
+        this.uploadVisible = false;
       }).catch(error => {
         this.uploading = false;
-        this.uploadVisible=false;
+        this.uploadVisible = false;
         console.log(error)
       })
     },
@@ -296,10 +296,27 @@ export default {
       this.uploadVisible = false
     },
 
-    showModal(){
+    showModal() {
+      if(this.$refs.ruleForm != undefined ){
+        this.$refs.ruleForm.resetFields();
+      }
       this.uploadVisible = true;
-    }
+    },
 
+    fastUpload(hash) {
+      uploadLocalData(hash, this.form.name, this.form.description).then(response => {
+        if (response.code === 0) {
+          this.uploading = false;
+          this.uploadVisible = false;
+          this.$message.success('upload successfully.');
+          this.$store.dispatch('getDataList')
+        } else {
+          this.uploading = false;
+          this.uploadVisible = false;
+          this.$message.error('upload failed.');
+        }
+      })
+    }
   },
 }
 </script>
