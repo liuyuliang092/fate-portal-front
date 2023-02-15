@@ -9,7 +9,7 @@
         </div>
       </div>
 
-      <a-table :columns="columns" :data-source="data" :key="data.name">
+      <a-table :columns="columns" :data-source="data" :key="data.name" :pagination="pagination">
         <span slot="action" slot-scope="record">
           <a @click="handleModelDownload(record.uuid)">下载</a>
           <a-divider type="vertical" />
@@ -88,7 +88,14 @@ export default {
       fileList: [],
       visibleDelete: false,
       confirmLoadingDelete: false,
-      tmpDelModel: ''
+      tmpDelModel: '',
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ["10", "20", "50", "100"],
+        showTotal: total => `共有 ${total} 条数据`,
+      },
     }
   },
   methods: {

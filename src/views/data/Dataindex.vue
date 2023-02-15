@@ -12,7 +12,7 @@
         </div>
       </div>
 
-      <a-table :columns="columns" :data-source="data">
+      <a-table :columns="columns" :data-source="data" :pagination="pagination">
         <span slot="name" slot-scope="text, record">
           <a @click="handleInfoClick(record.dataId)">{{ record.name }}</a>
         </span>
@@ -124,7 +124,14 @@ export default {
       },
       fileList: [],
       visibleDelete: false,
-      confirmLoadingDelete: false
+      confirmLoadingDelete: false,
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ["10", "20", "50", "100"],
+        showTotal: total => `共有 ${total} 条数据`,
+      },
     }
   },
   computed: {

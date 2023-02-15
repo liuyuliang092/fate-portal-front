@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-button @click="handleCreate" class="create-btn"> 关联数据 </a-button>
-    <a-table :columns="columns" :data-source="data">
+    <a-table :columns="columns" :data-source="data" :pagination="pagination">
       <span slot="action" slot-scope="text, record">
         <a @click="handleDataCancelClick(record.dataUuid)" v-if="record.dataUuid">取消关联</a>
       </span>
@@ -108,7 +108,14 @@ export default {
       memberdata,
       visible: false,
       confirmLoading: false,
-      selectedRowKeys: []
+      selectedRowKeys: [],
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ["10", "20", "50", "100"],
+        showTotal: total => `共有 ${total} 条数据`,
+      },
     }
   },
   watch: {
