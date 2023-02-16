@@ -3,8 +3,10 @@
     <a-dropdown :trigger="['contextmenu']">
       <div>
         <!-- <img :src="logo" /> -->
-        <a-icon type="database" style="text-align: left;"/>
-        <span class="label" style="text-align: center;">{{ nodeName }} </span>
+        <span class="icon-container">
+          <a-icon type="database" />
+        </span>
+        <span class="label" style="font-size: 14px; position: relative; top: -1px; left: 25px">{{ nodeName }} </span>
         <span class="status" style="text-align: right;">
           <img :src="statusImg" v-if="statusImg" />
         </span>
@@ -101,4 +103,10 @@ export default {
 }
 </script>
 <style  lang='less' scoped>
+.icon-container {
+  text-align: left;
+  position: relative;
+  right: -12px;
+  font-size: large
+}
 </style>
