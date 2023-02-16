@@ -2,9 +2,10 @@
   <div :class="nodeClass" class="node" @mousedown="mouseevent">
     <a-dropdown :trigger="['contextmenu']">
       <div>
-        <img :src="logo" />
-        <span class="label">{{ nodeName }} </span>
-        <span class="status">
+        <!-- <img :src="logo" /> -->
+        <a-icon type="database" style="text-align: left;"/>
+        <span class="label" style="text-align: center;">{{ nodeName }} </span>
+        <span class="status" style="text-align: right;">
           <img :src="statusImg" v-if="statusImg" />
         </span>
       </div>
