@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-button @click="handleCreate" class="create-btn"> 新建任务 </a-button>
-    <a-table :columns="columns" :data-source="data">
+    <a-table :columns="columns" :data-source="data" :pagination="pagination">
       <span slot="action" slot-scope="record">
         <a-space>
           <a @click="handleControlClick(record)">进入工作台</a>
@@ -94,7 +94,14 @@ export default {
     return {
       data: [],
       columns,
-      projectUuid: ''
+      projectUuid: '',
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ["10", "20", "50", "100"],
+        showTotal: total => `共有 ${total} 条数据`,
+      },
     }
   },
   mounted() {

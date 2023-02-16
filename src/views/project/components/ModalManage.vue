@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a-table :columns="columns" :data-source="data">
+    <a-table :columns="columns" :data-source="data" :pagination="pagination">
       <!-- <span slot="action">
         <a @click="handleDeleteModal">删除</a>
       </span> -->
@@ -79,7 +79,14 @@ export default {
 
     return {
       data,
-      columns
+      columns,
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ["10", "20", "50", "100"],
+        showTotal: total => `共有 ${total} 条数据`,
+      },
     }
   },
   watch: {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-button @click="handleCreate" class="create-btn"> 邀请新成员 </a-button>
-    <a-table :columns="columns" :data-source="data">
+    <a-table :columns="columns" :data-source="data" :pagination="pagination">
       <span slot="action" slot-scope="text, record">
         <a>删除</a>
       </span>
@@ -133,6 +133,13 @@ export default {
       // current: 1,
       // pageSize: 10,
       // total: 50,
+      pagination: {
+        total: 0,
+        pageSize: 10,
+        showSizeChanger: true,
+        pageSizeOptions: ["10", "20", "50", "100"],
+        showTotal: total => `共有 ${total} 条数据`,
+      },
     }
   },
   methods: {
