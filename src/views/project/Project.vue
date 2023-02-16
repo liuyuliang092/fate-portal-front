@@ -108,6 +108,9 @@ export default {
               this.$store.dispatch('getAllProjectList',this.queryParam).then(() => {
                 this.$refs.child.handleAllClick();
                 this.visible = false
+                if(this.$refs.ruleForm != undefined ){
+                  this.$refs.ruleForm.resetFields();
+                }
               });
             }
           });
@@ -121,6 +124,9 @@ export default {
     handleCancel(e) {
       console.log('Clicked cancel button')
       this.visible = false
+      if(this.$refs.ruleForm != undefined ){
+        this.$refs.ruleForm.resetFields();
+      }
     }
   }
 }

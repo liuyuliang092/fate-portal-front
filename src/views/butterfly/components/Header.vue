@@ -51,9 +51,9 @@ export default {
       console.info('save graphData = ', graphData);
       saveGraphData({ projectUuid: this.projectUuid, taskUuid: this.taskUuid, graphData: graphData }).then(response => {
         console.info('save graph result = ', response)
-        if(response.code === 0){
+        if (response.code === 0) {
           this.$message.success(response.message)
-        }else{
+        } else {
           this.$message.warning(response.message)
         }
       })
@@ -70,7 +70,7 @@ export default {
       sendReq(this)
     },
     // 获取节点状态并更新节点状态
-    async getNodeStatus() {
+    getNodeStatus() {
       let nodeList = [];
       this.vueGraph.toJSON().cells.forEach((item) => {
         if (item.shape == 'vue-shape') {
@@ -81,29 +81,25 @@ export default {
         }
 
       })
-      console.info('query node list = ', nodeList)
       let params = {
         projectUuid: this.projectUuid,
         taskUuid: this.taskUuid,
         nodeList: nodeList,
       }
-      console.info('query node status = ', params)
-      const response = await getComponentsStatus(params)
-      if (response.code === 0) {
-        this.$emit('showNodeStatus', response.data)
-      }
-
+      getComponentsStatus(params).then(res => {
+        if (res.code === 0) {
+          this.$emit('showNodeStatus', response.data)
+        }
+      })
     },
     //运行当前流程
     run() {
-      // this.setTimeoutForInterval();
+      this.setTimeoutForInterval();
       const graphData = this.vueGraph.toJSON();
       runGraph({ projectUuid: this.projectUuid, taskUuid: this.taskUuid, graphData: graphData }).then(res => {
-        if(res.code === 0){
+        if (res.code === 0) {
           this.$message.info(res.message);
-          // let runParams = JSON.stringify(JSON.parse(res.data), null, '\t')
-          // this.$message.info(runParams);
-        }else{
+        } else {
           this.$message.warn(res.message);
           this.$message.warn(res.data);
         }

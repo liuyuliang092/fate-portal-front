@@ -174,7 +174,8 @@ export default {
     getAssociatedDataListForProject(projectUuid) {
       getAssociatedDataListForProject(projectUuid).then(response => {
         if (response.code === 0) {
-          this.data = this.data.concat(response.data)
+          this.data = [];
+          this.data = this.data.concat(response.data);
         } else {
           this.$message.warning(res.message);
         }
