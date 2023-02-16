@@ -26,8 +26,10 @@ export default class VueGraph {
         this.graph = new Graph({
             container: document.getElementById(id),
             grid: true,
+            weight:1200,
+            height:800,
             autoResize: true,
-            scroller: true,
+            // scroller: true,
             panning: {
                 enabled: true,
                 eventTypes: ['leftMouseDown', 'mouseWheel'],
