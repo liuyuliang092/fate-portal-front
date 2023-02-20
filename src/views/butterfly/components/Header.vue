@@ -37,20 +37,18 @@ export default {
   },
   data() {
     return {
-      timer: null
+      timer: null,
+      continueQuery: true,
     }
   },
   mounted() {
-    console.info('head project uuid = ', this.projectUuid)
-    console.info('head task uuid = ', this.taskUuid)
+
   },
   methods: {
     //保存当前流程图
     save() {
       const graphData = this.vueGraph.toJSON();
-      console.info('save graphData = ', graphData);
       saveGraphData({ projectUuid: this.projectUuid, taskUuid: this.taskUuid, graphData: graphData }).then(response => {
-        console.info('save graph result = ', response)
         if (response.code === 0) {
           this.$message.success(response.message)
         } else {
@@ -62,16 +60,20 @@ export default {
     setTimeoutForInterval() {
       const sendReq = function (that) {
         that.timer = setTimeout(function () {
-          that.getNodeStatus()
-          clearTimeout(that.timer)
-          sendReq(that)
-        }, 6000)
+          that.getNodeStatus().then(res => {
+            clearTimeout(that.timer);
+            if (that.continueQuery) {
+              sendReq(that)
+            }
+          })
+        }, 3000)
       }
       sendReq(this)
     },
     // 获取节点状态并更新节点状态
     getNodeStatus() {
       let nodeList = [];
+      let continueFlag = true;
       this.vueGraph.toJSON().cells.forEach((item) => {
         if (item.shape == 'vue-shape') {
           let nodeInfo = {};
@@ -79,26 +81,38 @@ export default {
           nodeInfo.dslNodeId = item.dslNodeId;
           nodeList.push(nodeInfo);
         }
-
       })
       let params = {
         projectUuid: this.projectUuid,
         taskUuid: this.taskUuid,
         nodeList: nodeList,
       }
-      getComponentsStatus(params).then(res => {
+      continueFlag = getComponentsStatus(params).then(res => {
         if (res.code === 0) {
-          this.$emit('showNodeStatus', response.data)
+          this.$emit('showNodeStatus', res.data);
+          const tmp = JSON.stringify(res.data);
+          if (!(tmp.includes('default') || tmp.includes('running')) || tmp.includes('failed')) {
+            this.continueQuery = false;
+            continueFlag = false;
+          }
         }
+      }).catch(e => {
+        this.continueQuery = false;
+        continueFlag = false;
+        console.log(e);
       })
+      return continueFlag;
     },
     //运行当前流程
     run() {
-      this.setTimeoutForInterval();
       const graphData = this.vueGraph.toJSON();
       runGraph({ projectUuid: this.projectUuid, taskUuid: this.taskUuid, graphData: graphData }).then(res => {
         if (res.code === 0) {
           this.$message.info(res.message);
+          this.continueQuery = true;
+          this.getNodeStatus().then(res => {
+            this.setTimeoutForInterval();
+          })
         } else {
           this.$message.warn(res.message);
           this.$message.warn(res.data);

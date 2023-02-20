@@ -18,9 +18,10 @@
             :nodeStatusList="nodeStatusList"
             :taskUuid="this.$route.params.taskUuid"
             :projectUuid="this.$route.params.projectUuid"
+            ref="header"
           ></HeaderVue>
           <a-layout-content>
-            <div style="width:100%; height:100%">
+            <div style="width: 100%; height: 100%">
               <div id="vue-dag"></div>
             </div>
           </a-layout-content>
@@ -71,6 +72,9 @@ import HeaderVue from "@/views/butterfly/components/Header";
 import VueGraph from './graph';
 import { VueGraphData } from './graph/data';
 import { getGraphData, getAlgorithmComponents } from '@/api/graph'
+import failed from '@/views/butterfly/images/failed.png'
+import success from '@/views/butterfly/images/success.png'
+import running from '@/views/butterfly/images/running.png'
 
 // let graph = null;
 export default {
@@ -100,17 +104,23 @@ export default {
       projectUuid: '',
       taskUuid: '',
       dslNodeId: '',
+      statusIcons: {
+        success:
+          success,
+        failed:
+          failed,
+        running:
+          running,
+        default:
+          ''
+      },
     }
   },
   mounted() {
-    console.log('new dag id = ', this.$route.params.projectUuid)
     this.projectUuid = this.$route.params.projectUuid
     this.taskUuid = this.$route.params.taskUuid
     //加载画布
     this.initVueGraph();
-    //加载已有流程图
-    this.initVueGraphData(this.projectUuid, this.taskUuid);
-    
     //加载节点列表
     this.initVueGraphNodeData();
     // 是否显示右则菜单
@@ -118,7 +128,6 @@ export default {
       this.nodeId = ''
       this.showRight = false
     });
-
     // 节点点击
     this.graph.on('node:click', ({ node }) => {
       const nodeData = node.store.data;
@@ -127,7 +136,6 @@ export default {
       this.nodeId = data.nodeId;
       this.dslNodeId = dslNodeId;
       this.onclickNodeData = { nodeId: this.nodeId, dslNodeId: dslNodeId, projectUuid: this.projectUuid, taskUuid: this.taskUuid };
-      console.info('node click info = ', this.onclickNodeData);
     });
     this.graph.on('selection:changed', (args) => {
       args.added.forEach(cell => {
@@ -141,6 +149,8 @@ export default {
     initVueGraph() {
       const miniMapContainerRef = this.$refs.miniMapContainerRef;
       this.graph = VueGraph.init("vue-dag", nodeTemplate, miniMapContainerRef);
+      //加载已有流程图
+      this.initVueGraphData(this.projectUuid, this.taskUuid);
     },
     //查询当前项目画布数据
     initVueGraphData(projectUuid, taskUuid) {
@@ -149,17 +159,11 @@ export default {
         taskUuid: taskUuid,
       };
       getGraphData(params).then(res => {
-        console.info('graph data from mock = ', JSON.parse(JSON.stringify(VueGraphData.nodeData)))
         if (res.code === 0) {
-          console.info('graph data from back = ', res.data.graphData.cells)
           this.graphData = res.data.graphData.cells;
           this.init(this.graphData);
         }
       });
-      // this.graphData = VueGraphData;
-      //此处必须使用深拷贝，否则后面数据修改会由于浅拷贝导致影响数据结构进而影响后续数据加载
-      // const tmp = JSON.parse(JSON.stringify(VueGraphData.nodeData))
-      // return tmp;
     },
 
     //初始化节点列表
@@ -167,10 +171,8 @@ export default {
       this.nodeList = [];
       const resposne = await getAlgorithmComponents(1)
       if (resposne.code === 0) {
-        console.info('node list = ', resposne.data);
         this.nodeList = resposne.data;
       }
-      // this.nodeList = VueGraphData.nodeList;
     },
 
     //初始化画布数据
@@ -182,38 +184,7 @@ export default {
             item.width = 180;
             item.height = 36;
             item.component = 'nodeTemplate';
-            // item.tools = nodeTools;
-            // if (item.ports) {
-            //   item.ports = {
-            //     groups: {
-            //       top: {
-            //         position: 'top',
-            //         attrs: {
-            //           circle: {
-            //             r: 4,
-            //             magnet: true,
-            //             stroke: '#C2C8D5',
-            //             strokeWidth: 1,
-            //             fill: '#fff',
-            //           },
-            //         },
-            //       },
-            //       bottom: {
-            //         position: 'bottom',
-            //         attrs: {
-            //           circle: {
-            //             r: 4,
-            //             magnet: true,
-            //             stroke: '#C2C8D5',
-            //             strokeWidth: 1,
-            //             fill: '#fff',
-            //           },
-            //         },
-            //       },
-            //     },
-            //     items: item.ports,
-            //   };
-            // }
+            item.data.statusImg=this.statusIcons[item.data.status],
             cells.push(this.graph.createNode(item));
           } else {
             cells.push(this.graph.createEdge(item));
@@ -221,14 +192,10 @@ export default {
         });
       }
       this.graph.resetCells(cells);
-    //   //测试用，后续需根据实际情况查询
-    // this.nodeStatusList = JSON.parse(JSON.stringify(VueGraphData.nodeStatusList));
-    // //更新状态
-    // this.showNodeStatus(this.nodeStatusList);
+      this.$refs.header.setTimeoutForInterval();
     },
     //定时运行查询节点运行结果并更新页面节点状态
     showNodeStatus(statusList) {
-      // let status = statusList.shift();
       statusList?.forEach((item) => {
         let { id, status } = item;
         let node = this.graph.getCellById(id);
@@ -236,12 +203,9 @@ export default {
         node.setData({
           ...data,
           status: status,
-          statusImg: VueGraphData.nodeImage[status],
+          statusImg: this.statusIcons[status],
         });
       });
-      setTimeout(() => {
-        this.showNodeStatus(statusList);
-      }, 2000);
     },
     // 更新 RightDrawer visable
     updateVisableFn(val) {
