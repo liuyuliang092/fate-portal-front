@@ -6,8 +6,8 @@
         <span class="icon-container">
           <a-icon type="database" />
         </span>
-        <span class="label" style="font-size: 14px; position: relative; top: -1px; left: 25px">{{ nodeName }} </span>
-        <span class="status" style="text-align: right;">
+        <span class="label" style="font-size: 14px; position: relative; top: -2px; left: 15px;">{{ nodeName }} </span>
+        <span class="status" style="text-align: right; position: relative; top: -2px; right: 0px;">
           <img :src="statusImg" v-if="statusImg" />
         </span>
       </div>
