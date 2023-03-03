@@ -3,6 +3,9 @@
     <a-space>
       <a-button @click="save"> 保存 </a-button>
       <a-button @click="run"> 运行 </a-button>
+      <a-button @click="pause"> 暂停 </a-button>
+      <a-button @click="resume"> 继续 </a-button>
+      <a-button @click="beautify">美化画布</a-button>
     </a-space>
   </div>
 </template>
@@ -118,6 +121,19 @@ export default {
           this.$message.warn(res.data);
         }
       })
+    },
+    // 暂停执行
+    pause() {
+      // TODO: 1.pause api => clear timeout
+      clearTimeout(this.timer);
+    },
+    // 继续执行
+    resume() {
+      // TODO
+    },
+    // 美化
+    beautify() {
+      this.$emit('beautify')
     }
   },
 }
