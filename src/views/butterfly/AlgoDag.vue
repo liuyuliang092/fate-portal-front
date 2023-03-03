@@ -18,6 +18,7 @@
             :nodeStatusList="nodeStatusList"
             :taskUuid="this.$route.params.taskUuid"
             :projectUuid="this.$route.params.projectUuid"
+            @beautify="beautifyCanvas"
             ref="header"
           ></HeaderVue>
           <a-layout-content>
@@ -43,6 +44,9 @@
       右键菜单
     -->
     <div><RightMenu></RightMenu></div>
+    <a-modal v-model:visible.sync="modalVisible" :title="modalTitle" @ok="modalVisible = false" :footer='null' closable width="80%">
+      <model-eval-view :node="modalNode" v-if="modalAction === 'viewEval'"></model-eval-view>
+    </a-modal>
   </div>
 </template>
 
@@ -70,11 +74,13 @@ import RightDrawer from './components/RightDrawer';
 import RightMenu from './components/RightMenu';
 import HeaderVue from "@/views/butterfly/components/Header";
 import VueGraph from './graph';
+import { DagreLayout } from "@antv/layout"
 import { VueGraphData } from './graph/data';
 import { getGraphData, getAlgorithmComponents } from '@/api/graph'
 import failed from '@/views/butterfly/images/failed.png'
 import success from '@/views/butterfly/images/success.png'
 import running from '@/views/butterfly/images/running.png'
+import ModelEvalView from '@/views/butterfly/components/ModelEvalView.vue'
 
 // let graph = null;
 export default {
@@ -84,7 +90,8 @@ export default {
     nodeList,
     RightDrawer,
     RightMenu,
-    HeaderVue
+    HeaderVue,
+    ModelEvalView
   },
   data() {
     return {
@@ -114,7 +121,14 @@ export default {
         default:
           ''
       },
+      modalNode: {},
+      modalVisible: false,
+      modalTitle: '',
+      modalAction: ''
     }
+  },
+  beforeDestroy() {
+    this.$bus.$off('contextAction')
   },
   mounted() {
     this.projectUuid = this.$route.params.projectUuid
@@ -143,6 +157,10 @@ export default {
       })
     });
     this.graph.centerContent({ padding: { right: 550 } });
+    this.$bus.$on('contextAction', (action) => {
+      console.log('received!')
+      this.handleContextAction(action)
+    })
   },
   methods: {
     //初始化画布
@@ -227,6 +245,50 @@ export default {
       this.$router.push({ name: 'project-info', params: { from: 'algoDag', key: '2', uuid: this.projectUuid } }).catch(() => {
         console.log('登录跳转首页出错,这个错误从哪里来的')
       })
+    },
+    // 美化画布
+    beautifyCanvas() {
+      const layout = new DagreLayout({
+        type: 'dagre',
+        rankdir: 'TB',
+        align: undefined,
+        ranksep: 15,
+        nodesep: 15,
+      })
+      const nodes = []
+      const edges = []
+      this.graph.toJSON().cells.forEach(c => {
+        if (c.shape === 'vue-shape') {
+          nodes.push(c)
+        } else {
+          edges.push(c)
+        }
+      })
+      const model = layout.layout({nodes: nodes, edges: edges})
+      this.graph.fromJSON(model)
+      this.graph.centerContent()
+    },
+    doAction() {
+      // TODO: context menu action
+    },
+    handleContextAction(action) {
+      switch (action.type) {
+        case 'viewEval':
+          this.viewModelEval(action)
+          break
+        default:
+          return
+      }
+    },
+    viewModelEval(action) {
+      this.modalNode = {
+        nodeId: action.nodeId,
+        projectUuid: this.projectUuid,
+        taskUuid: this.taskUuid
+      }
+      this.modalAction = action.type
+      this.modalTitle = action.title
+      this.modalVisible = true
     }
   },
 };
