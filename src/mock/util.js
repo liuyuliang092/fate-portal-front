@@ -6,7 +6,7 @@ const responseBody = {
 }
 
 export const builder = (data, message, code = 0, headers = {}) => {
-  responseBody.result = data
+  responseBody.data = data
   if (message !== undefined && message !== null) {
     responseBody.message = message
   }
