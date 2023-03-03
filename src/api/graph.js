@@ -86,3 +86,11 @@ export function getComponentsStatus(params) {
     data: params
   })
 }
+
+export function getThresholdEval(params) {
+  return axios({
+    url: '/v1/evalThreshold',
+    method: 'post',
+    data: params
+  })
+}

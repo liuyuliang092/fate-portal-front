@@ -23,3 +23,12 @@ export function deleteJob(params) {
     method: 'delete'
   })
 }
+
+export function getTaskExeHis(params) {
+  return axios({
+    // TODO: check with back-end
+    url: `/v1/job/history`,
+    data: params,
+    method: 'post'
+  })
+}
