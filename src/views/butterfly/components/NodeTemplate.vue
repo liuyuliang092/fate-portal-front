@@ -39,7 +39,7 @@
  *
  */
 
-import { menuList, menuList2, menuList3 } from '../graph/menu';
+import { menuList, menuList2, menuList3, menuMap } from '../graph/menu';
 export default {
   inject: ['getGraph', 'getNode'],
   components: {
@@ -66,22 +66,28 @@ export default {
     nodeMenuClick(val) {
       let graph = this.getGraph();
       let node = this.getNode();
+      let action = {
+        type: val.key,
+        nodeId: node.data.nodeId,
+        title: val.item.menu_name
+      }
+      this.$bus.$emit('contextAction', action)
     },
 
     //根据选择不同的组件展示不同的菜单,具体实现根据实际情况修改
     getMenuListByNode(id) {
-      if (id === '1') {
-        this.data = menuList;
-      } else {
-        this.data = menuList2;
-      }
-      this.data = menuList3;
+      // if (id === '1') {
+      //   this.data = menuList;
+      // } else {
+      //   this.data = menuList2;
+      // }
+      this.data = menuMap[id] ? menuMap[id] : menuList3
     },
     //
     mouseevent(event) {
       if (event.which === 3) {
         let node = this.getNode();
-        this.getMenuListByNode(node.id)
+        this.getMenuListByNode(node.data.nodeId)
       }
     }
   },
@@ -102,7 +108,7 @@ export default {
   },
 }
 </script>
-<style  lang='less' scoped>
+<style>
 .icon-container {
   text-align: left;
   position: relative;

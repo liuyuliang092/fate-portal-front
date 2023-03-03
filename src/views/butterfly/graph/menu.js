@@ -38,3 +38,13 @@ export const menuList3 = [{
   id: 1,
   menu_name: '暂未开通,敬请期待'
 }]
+
+const commonMenuList = []
+const evalMenuList = [{
+  id: 'viewEval',
+  menu_name: '查看评估结果'
+}]
+
+export const menuMap = {
+  'modelEval': evalMenuList // TODO: check component nodeId
+}
