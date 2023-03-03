@@ -59,7 +59,13 @@ export const asyncRouterMap = [
         component: () => import('@/views/project/components/TaskManage'),
         meta: { title: '新建任务', keepAlive: true, icon: 'form', }
       },
-
+      {
+        path: '/project/taskExeHistory',
+        name: 'project-task-exe-his',
+        hidden: true,
+        component: () => import('@/views/project/components/TaskExeHistory.vue'),
+        meta: { title: '任务执行流水', keepAlive: true, icon: 'form', }
+      },
       {
         path: '/project/newTask',
         name: 'project/newTask',

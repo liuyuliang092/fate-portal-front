@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-button @click="handleCreate" class="create-btn"> 新建任务 </a-button>
-    <a-table :columns="columns" :data-source="data" :pagination="pagination">
+    <a-table :columns="columns" :data-source="data" :pagination="pagination"  :rowKey="(record) => record.uuid">
       <span slot="action" slot-scope="record">
         <a-space>
           <a @click="handleControlClick(record)">进入工作台</a>
@@ -11,6 +11,11 @@
       <span slot="type" slot-scope="record">
         <a-space>
           <div v-if="record.type==0">模型训练</div>
+        </a-space>
+      </span>
+      <span slot="name" slot-scope="text, record">
+        <a-space>
+          <a @click="handleExeHisClick(record)">{{ text }}</a>
         </a-space>
       </span>
     </a-table>
@@ -48,7 +53,8 @@ export default {
       {
         title: '名称',
         dataIndex: 'name',
-        key: 'name'
+        key: 'name',
+        scopedSlots: { customRender: 'name' }
       },
       {
         title: '创建时间',
@@ -136,6 +142,11 @@ export default {
           }
         })
       })
+    },
+    // 查看执行流水
+    handleExeHisClick(record) {
+      console.info('exeHis = ', record)
+      this.$router.push({name: 'project-task-exe-his', query: {taskUuid: record.uuid, projectUuid: record.projectUuid}})
     }
   },
 
