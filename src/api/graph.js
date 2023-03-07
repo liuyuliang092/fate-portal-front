@@ -94,3 +94,19 @@ export function getThresholdEval(params) {
     data: params
   })
 }
+
+export function getQuantileEval(params) {
+  return axios({
+    url: '/v1/evalQuantile',
+    method: 'post',
+    data: params
+  })
+}
+
+export function getPlotData(params) {
+  return axios({
+    url: '/v1/plotData',
+    method: 'post',
+    data: params
+  })
+}

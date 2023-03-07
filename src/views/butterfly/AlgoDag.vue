@@ -268,9 +268,6 @@ export default {
       this.graph.fromJSON(model)
       this.graph.centerContent()
     },
-    doAction() {
-      // TODO: context menu action
-    },
     handleContextAction(action) {
       switch (action.type) {
         case 'viewEval':
