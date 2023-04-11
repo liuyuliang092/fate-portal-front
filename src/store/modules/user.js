@@ -29,7 +29,7 @@ const user = {
     welcome: '',
     avatar: '',
     roles: [],
-    info: {}
+    info: {},
   },
 
   mutations: {
@@ -56,10 +56,12 @@ const user = {
     Login({ commit }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-          const result = response.data
-          storage.set(ACCESS_TOKEN, result.token, new Date().getTime() + 60 * 60 * 1000)
-          commit('SET_TOKEN', result.token)
-          resolve()
+          if(response.code===0){
+            const result = response.data
+            storage.set(ACCESS_TOKEN, result.token, new Date().getTime() + 60 * 60 * 1000)
+            commit('SET_TOKEN', result.token)
+          }
+          resolve(response)
         }).catch(error => {
           reject(error)
         })

@@ -179,11 +179,16 @@ export default {
           loginParams[!state.loginType ? 'email' : 'username'] = values.username
           loginParams.password = md5(values.password)
           Login(loginParams)
-            .then(() => {
-              const token = this.$store.getters.token;
-              if (token) {
+            .then(res => {
+              if(res.code === 0){
                 this.loginSuccess()
+              }else{
+                this.$message.warn(res.message)
               }
+              // const token = this.$store.getters.token;
+              // if (token) {
+              //   this.loginSuccess()
+              // }
             })
             .catch(err => this.requestFailed(err))
             .finally(() => {

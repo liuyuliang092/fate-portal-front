@@ -193,7 +193,6 @@ export default {
           this.$message.success(res.message);
           this.fastUpload(this.hash);
         } else {
-          debugger
           this.uploading = true;
           // this.sliceCount -= this.finishCount;
           this.errorCount = 0;
@@ -238,7 +237,7 @@ export default {
             this.errorCount += 1;
           }
           if (this.errorCount != 0 && this.errorCount + this.finishCount === this.sliceCount) {
-            this.$message.error("some error occurred during upload, please upload again");
+            this.$message.error(res.message);
             this.showProgress = false;
             this.uploading = false;
           }
